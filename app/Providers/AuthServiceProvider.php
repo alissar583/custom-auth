@@ -4,6 +4,8 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 
+use App\Exceptions\InvalidTokenException;
+use App\Exceptions\UserNotFoundException;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -30,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
 
             if ($token) {
                 list($header, $payload, $signature) = explode('.', $token);
-                
+
                 $base64UrlHeader = base64_decode(str_replace(['-', '_'], ['+', '/'], $header));
                 $base64UrlPayload = base64_decode(str_replace(['-', '_'], ['+', '/'], $payload));
                 $base64UrlSignature = base64_decode(str_replace(['-', '_'], ['+', '/'], $signature));
@@ -39,22 +41,31 @@ class AuthServiceProvider extends ServiceProvider
                 $payloadArray = json_decode($base64UrlPayload, true);
 
                 if ($headerArray['alg'] !== 'HS256') {
-                    return null;
+                    throw new InvalidTokenException();
                 }
 
                 $validSignature = hash_hmac('sha256', "$header.$payload", env('JWT_SECRET'), true);
 
                 if ($base64UrlSignature !== $validSignature) {
-                    return null;
+                    throw new InvalidTokenException();
                 }
 
                 if (isset($payloadArray['id'])) {
                     $userId = $payloadArray['id'];
-                    return User::find($userId);
-                }
-            }
+                    $user = User::find($userId);
 
-            return null;
+                    if (!$user) {
+                        throw new UserNotFoundException();
+                    }
+
+                    Auth::setUser($user);
+                    return $user;
+                } else {
+                    throw new InvalidTokenException();
+                }
+            } else {
+                throw new InvalidTokenException();
+            }
         });
     }
 }

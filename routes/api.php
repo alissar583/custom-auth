@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [AuthController::class, 'login']);
+
 Route::prefix('posts')->controller(PostController::class)->middleware('auth.custom')->group(function () {
     Route::get('', 'index');
 });

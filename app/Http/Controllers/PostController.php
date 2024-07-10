@@ -19,6 +19,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        // return auth()->logout();
         $response = $this->postService->index();
         return $this->successResponse($response);
     }

@@ -11,6 +11,8 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['title', 'description', 'status'];
+
     protected function status(): Attribute
     {
         return Attribute::make(

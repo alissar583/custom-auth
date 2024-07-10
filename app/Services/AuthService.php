@@ -19,7 +19,10 @@ class AuthService
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->generateToken();
-            return $token;
+            return [
+                'user' => $user,
+                'token' => $token
+            ];
         }
 
         return 401;

@@ -23,8 +23,13 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (InvalidTokenException $e, $request) {
+            return response()->json(['error' => $e->getMessage()], 401);
         });
+
+        $this->renderable(function (UserNotFoundException $e, $request) {
+            return response()->json(['error' => $e->getMessage()], 404);
+        });
+
     }
 }
