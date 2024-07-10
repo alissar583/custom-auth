@@ -20,4 +20,9 @@ class Post extends Model
             fn (string $value) => PostStatusEnum::getValueByAlias($value),
         );
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

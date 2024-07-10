@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangeStatusRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Http\Request;
@@ -19,8 +21,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        // return auth()->logout();
         $response = $this->postService->index();
+        $response = PostResource::collection($response)->response()->getData();
         return $this->successResponse($response);
     }
 
@@ -45,30 +47,17 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $this->authorize('view', $post);
+        $post = $this->postService->show($post);
+        $post = PostResource::make($post);
+        return $this->successResponse($post);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
+
+    public function changeStatus(ChangeStatusRequest $request, Post $post)
     {
-        //
+        $this->postService->changeStatus($request->validated(), $post);
+        return $this->successResponse();
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
-    }
 }

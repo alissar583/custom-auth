@@ -6,7 +6,9 @@ namespace App\Providers;
 
 use App\Exceptions\InvalidTokenException;
 use App\Exceptions\UserNotFoundException;
+use App\Models\Post;
 use App\Models\User;
+use App\Policies\PostPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +21,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Post::class => PostPolicy::class
     ];
 
     /**
@@ -27,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerPolicies();
         Auth::viaRequest('custom-token', function (Request $request) {
             $token = $request->bearerToken();
 

@@ -24,4 +24,6 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::prefix('posts')->controller(PostController::class)->middleware('auth.custom')->group(function () {
     Route::get('', 'index');
+    Route::get('{post}', 'show');
+    Route::put('/{post}/change-status', 'changeStatus');
 });
