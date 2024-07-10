@@ -31,7 +31,7 @@ This Laravel project is a simple application that manages users and their posts.
    ```sh
    cp .env.example .env
    php artisan key:generate
-   
+
 4. **Run the Custom Setup Command:**
    ```sh
    php artisan project:setup
@@ -53,3 +53,6 @@ This Laravel project is a simple application that manages users and their posts.
 - **Resources:**
 - UserResource: Handles the transformation of User data for API responses.
 - PostResource: Handles the transformation of Post data for API responses.
+
+- **Postman collection:**
+- https://documenter.getpostman.com/view/18433697/2sA3e49oUB
