@@ -20,7 +20,7 @@ class AuthController extends Controller
     {
         $response = $this->authService->login($request->validated());
         if ($response == 401) {
-            return $this->failResponse("Un Authenticated", 401);
+            return $this->failResponse("Unauthorized", 401);
         }
         $response['user'] = UserResource::make($response['user']);
         return $this->successResponse($response);
